@@ -1,0 +1,362 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-11 18:05:00.134454",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_d3vu",
+  "finance_dossier_from",
+  "id",
+  "column_break_pjpp",
+  "address",
+  "amended_from",
+  "opportunity_details_section",
+  "deal_type",
+  "pricing_model",
+  "payment_term",
+  "column_break_fzqz",
+  "contract_expiry",
+  "discount_type",
+  "invoicing_frequency",
+  "invoicing_type",
+  "vat_section",
+  "vat_number",
+  "vat_expiry_date",
+  "vat_certificate",
+  "trade_licence_section",
+  "trade_licence_number",
+  "trade_licence_expiry",
+  "trade_licence_copy",
+  "kyc_and_others_section",
+  "manager_kyc",
+  "manager_kyc_expiry",
+  "credit_agreement",
+  "commericals_section",
+  "approver",
+  "expected_monthly_volume",
+  "column_break_qtww",
+  "payment_mode",
+  "credit_days",
+  "invoice_frequency",
+  "discount_info_section",
+  "discount",
+  "discount_method",
+  "percentageper_litre",
+  "percentage_value",
+  "per_litre_value",
+  "max_discount_value",
+  "slab_discount",
+  "rejection_details_section",
+  "rejection_table",
+  "remarks_section",
+  "finance_remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_d3vu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "finance_dossier_from",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Finance Dossier From",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "id",
+   "fieldtype": "Dynamic Link",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "ID",
+   "options": "finance_dossier_from"
+  },
+  {
+   "fieldname": "column_break_pjpp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Link",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Address",
+   "options": "Address",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Finance Dossier",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "opportunity_details_section",
+   "fieldtype": "Section Break",
+   "label": "Opportunity Details"
+  },
+  {
+   "fieldname": "deal_type",
+   "fieldtype": "Link",
+   "label": "Deal Type",
+   "options": "Deal Type"
+  },
+  {
+   "fieldname": "pricing_model",
+   "fieldtype": "Select",
+   "label": "Pricing Model",
+   "options": "\nFixed Rate\nPump Minus Discount"
+  },
+  {
+   "fieldname": "payment_term",
+   "fieldtype": "Link",
+   "label": "Payment Term",
+   "options": "Payment Term"
+  },
+  {
+   "fieldname": "column_break_fzqz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contract_expiry",
+   "fieldtype": "Date",
+   "label": "Contract Expiry"
+  },
+  {
+   "fieldname": "discount_type",
+   "fieldtype": "Link",
+   "label": "Discount Type",
+   "options": "Discount"
+  },
+  {
+   "fieldname": "invoicing_frequency",
+   "fieldtype": "Link",
+   "label": "Invoicing Frequency",
+   "options": "Invoice Days"
+  },
+  {
+   "fieldname": "invoicing_type",
+   "fieldtype": "Link",
+   "label": "Invoicing Type",
+   "options": "Invoice Type"
+  },
+  {
+   "fieldname": "vat_section",
+   "fieldtype": "Section Break",
+   "label": "VAT"
+  },
+  {
+   "fieldname": "vat_number",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "VAT Number"
+  },
+  {
+   "fieldname": "vat_expiry_date",
+   "fieldtype": "Date",
+   "label": "VAT Expiry Date"
+  },
+  {
+   "fieldname": "vat_certificate",
+   "fieldtype": "Attach",
+   "label": "VAT Certificate"
+  },
+  {
+   "fieldname": "trade_licence_section",
+   "fieldtype": "Section Break",
+   "label": "Trade Licence"
+  },
+  {
+   "fieldname": "trade_licence_number",
+   "fieldtype": "Data",
+   "in_filter": 1,
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Trade Licence Number"
+  },
+  {
+   "fieldname": "trade_licence_expiry",
+   "fieldtype": "Date",
+   "label": "Trade Licence Expiry"
+  },
+  {
+   "fieldname": "trade_licence_copy",
+   "fieldtype": "Attach",
+   "label": "Trade Licence Copy"
+  },
+  {
+   "fieldname": "kyc_and_others_section",
+   "fieldtype": "Section Break",
+   "label": "KYC and Others"
+  },
+  {
+   "fieldname": "manager_kyc",
+   "fieldtype": "Attach",
+   "label": "Manager KYC"
+  },
+  {
+   "fieldname": "manager_kyc_expiry",
+   "fieldtype": "Date",
+   "label": "Manager KYC Expiry"
+  },
+  {
+   "fieldname": "credit_agreement",
+   "fieldtype": "Attach",
+   "label": "Credit Agreement"
+  },
+  {
+   "fieldname": "commericals_section",
+   "fieldtype": "Section Break",
+   "label": "Commericals"
+  },
+  {
+   "fieldname": "approver",
+   "fieldtype": "Link",
+   "label": "Approver",
+   "options": "Contact"
+  },
+  {
+   "fieldname": "expected_monthly_volume",
+   "fieldtype": "Float",
+   "label": "Expected Monthly Volume"
+  },
+  {
+   "fieldname": "column_break_qtww",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_mode",
+   "fieldtype": "Link",
+   "label": "Payment Mode",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "credit_days",
+   "fieldtype": "Link",
+   "label": "Credit Days",
+   "options": "Payment Term"
+  },
+  {
+   "fieldname": "invoice_frequency",
+   "fieldtype": "Link",
+   "label": "Invoice Frequency",
+   "options": "Invoice Days"
+  },
+  {
+   "fieldname": "discount_info_section",
+   "fieldtype": "Section Break",
+   "label": "Discount Info"
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Link",
+   "label": "Discount",
+   "options": "Discount"
+  },
+  {
+   "fieldname": "discount_method",
+   "fieldtype": "Select",
+   "label": "Discount Method",
+   "options": "\nSlab Discount\nNon-Slab Discount"
+  },
+  {
+   "fieldname": "percentageper_litre",
+   "fieldtype": "Select",
+   "label": "Percentage/Per Litre",
+   "options": "\nPercentage\nPer Litre"
+  },
+  {
+   "fieldname": "percentage_value",
+   "fieldtype": "Percent",
+   "label": "Percentage Value"
+  },
+  {
+   "fieldname": "per_litre_value",
+   "fieldtype": "Float",
+   "label": "Per Litre Value"
+  },
+  {
+   "fieldname": "max_discount_value",
+   "fieldtype": "Float",
+   "label": "Max Discount Value"
+  },
+  {
+   "fieldname": "slab_discount",
+   "fieldtype": "Table",
+   "label": "Slab Discount",
+   "options": "Slab Discount"
+  },
+  {
+   "fieldname": "rejection_details_section",
+   "fieldtype": "Section Break",
+   "label": "Rejection Details"
+  },
+  {
+   "fieldname": "rejection_table",
+   "fieldtype": "Table",
+   "label": "Rejection Table",
+   "options": "Rejection Details"
+  },
+  {
+   "fieldname": "remarks_section",
+   "fieldtype": "Section Break",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "finance_remarks",
+   "fieldtype": "Text Editor",
+   "label": "Finance Remarks"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-06-16 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Fuelbuddy Finance Dossier",
+ "name": "Finance Dossier",
+ "owner": "shubhankar.srivastava@fuelbuddy.in",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
