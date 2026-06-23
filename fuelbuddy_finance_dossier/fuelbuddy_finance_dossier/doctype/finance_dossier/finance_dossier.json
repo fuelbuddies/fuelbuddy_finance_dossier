@@ -20,18 +20,6 @@
   "discount_type",
   "invoicing_frequency",
   "invoicing_type",
-  "vat_section",
-  "vat_number",
-  "vat_expiry_date",
-  "vat_certificate",
-  "trade_licence_section",
-  "trade_licence_number",
-  "trade_licence_expiry",
-  "trade_licence_copy",
-  "kyc_and_others_section",
-  "manager_kyc",
-  "manager_kyc_expiry",
-  "credit_agreement",
   "commericals_section",
   "approver",
   "expected_monthly_volume",
@@ -155,76 +143,6 @@
    "fieldtype": "Link",
    "label": "Invoicing Type",
    "options": "Invoice Type"
-  },
-  {
-   "fieldname": "vat_section",
-   "fieldtype": "Section Break",
-   "label": "VAT"
-  },
-  {
-   "fieldname": "vat_number",
-   "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "VAT Number"
-  },
-  {
-   "fieldname": "vat_expiry_date",
-   "fieldtype": "Date",
-   "label": "VAT Expiry Date"
-  },
-  {
-   "fieldname": "vat_certificate",
-   "fieldtype": "Attach",
-   "label": "VAT Certificate"
-  },
-  {
-   "fieldname": "trade_licence_section",
-   "fieldtype": "Section Break",
-   "label": "Trade Licence"
-  },
-  {
-   "fieldname": "trade_licence_number",
-   "fieldtype": "Data",
-   "in_filter": 1,
-   "in_global_search": 1,
-   "in_list_view": 1,
-   "in_preview": 1,
-   "in_standard_filter": 1,
-   "label": "Trade Licence Number"
-  },
-  {
-   "fieldname": "trade_licence_expiry",
-   "fieldtype": "Date",
-   "label": "Trade Licence Expiry"
-  },
-  {
-   "fieldname": "trade_licence_copy",
-   "fieldtype": "Attach",
-   "label": "Trade Licence Copy"
-  },
-  {
-   "fieldname": "kyc_and_others_section",
-   "fieldtype": "Section Break",
-   "label": "KYC and Others"
-  },
-  {
-   "fieldname": "manager_kyc",
-   "fieldtype": "Attach",
-   "label": "Manager KYC"
-  },
-  {
-   "fieldname": "manager_kyc_expiry",
-   "fieldtype": "Date",
-   "label": "Manager KYC Expiry"
-  },
-  {
-   "fieldname": "credit_agreement",
-   "fieldtype": "Attach",
-   "label": "Credit Agreement"
   },
   {
    "fieldname": "commericals_section",
