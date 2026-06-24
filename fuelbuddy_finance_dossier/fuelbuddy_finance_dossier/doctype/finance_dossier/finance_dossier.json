@@ -17,7 +17,6 @@
   "payment_term",
   "column_break_fzqz",
   "contract_expiry",
-  "discount_type",
   "invoicing_frequency",
   "invoicing_type",
   "commericals_section",
@@ -26,7 +25,6 @@
   "column_break_qtww",
   "payment_mode",
   "credit_days",
-  "invoice_frequency",
   "discount_info_section",
   "discount",
   "discount_method",
@@ -127,12 +125,6 @@
    "label": "Contract Expiry"
   },
   {
-   "fieldname": "discount_type",
-   "fieldtype": "Link",
-   "label": "Discount Type",
-   "options": "Discount"
-  },
-  {
    "fieldname": "invoicing_frequency",
    "fieldtype": "Link",
    "label": "Invoicing Frequency",
@@ -175,12 +167,6 @@
    "fieldtype": "Link",
    "label": "Credit Days",
    "options": "Payment Term"
-  },
-  {
-   "fieldname": "invoice_frequency",
-   "fieldtype": "Link",
-   "label": "Invoice Frequency",
-   "options": "Invoice Days"
   },
   {
    "fieldname": "discount_info_section",

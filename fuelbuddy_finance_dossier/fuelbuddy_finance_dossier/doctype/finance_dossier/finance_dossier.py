@@ -33,15 +33,30 @@ class FinanceDossier(Document):
 	# -- validation -----------------------------------------------------------
 
 	def _require_documents(self):
-		"""At least one Business Documentation must be uploaded in the Documents tab."""
-		count = frappe.db.count(
-			"Business Documentation",
-			{"reference_doctype": self.doctype, "reference_name": self.name},
-		)
-		if not count:
-			frappe.throw(
-				_("Upload at least one document in the Documents tab before submitting the Finance Dossier.")
+		"""At least one Business Documentation must exist somewhere on the chain --
+		on this Finance Dossier, on its source Quotation, or on the Opportunity it
+		belongs to -- so documents uploaded earlier in the flow (Opportunity /
+		Quotation) satisfy the requirement and don't have to be re-uploaded here."""
+		refs = [(self.doctype, self.name)]
+		if self.finance_dossier_from == "Quotation" and self.id:
+			refs.append(("Quotation", self.id))
+		opportunity = self._opportunity()
+		if opportunity:
+			refs.append(("Opportunity", opportunity))
+
+		for ref_doctype, ref_name in refs:
+			if frappe.db.count(
+				"Business Documentation",
+				{"reference_doctype": ref_doctype, "reference_name": ref_name},
+			):
+				return
+
+		frappe.throw(
+			_(
+				"Upload at least one document (on the Opportunity, the Quotation, or this "
+				"Finance Dossier) before submitting the Finance Dossier."
 			)
+		)
 
 	def _require_submitted_quotation(self):
 		"""The Quotation this Finance Dossier was raised from must be submitted."""
