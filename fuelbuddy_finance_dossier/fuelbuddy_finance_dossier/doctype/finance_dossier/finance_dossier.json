@@ -25,6 +25,7 @@
   "column_break_qtww",
   "payment_mode",
   "credit_days",
+  "credit_insurance_limit",
   "discount_info_section",
   "discount",
   "discount_method",
@@ -167,6 +168,12 @@
    "fieldtype": "Link",
    "label": "Credit Days",
    "options": "Payment Term"
+  },
+  {
+   "description": "Insured credit limit for this customer. On submit it becomes the customer's credit limit on the Credit record.",
+   "fieldname": "credit_insurance_limit",
+   "fieldtype": "Currency",
+   "label": "Credit Insurance Limit"
   },
   {
    "fieldname": "discount_info_section",
