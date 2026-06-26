@@ -166,7 +166,7 @@
   {
    "fieldname": "credit_days",
    "fieldtype": "Link",
-   "label": "Credit Days",
+   "label": "Payment Terms",
    "options": "Payment Term"
   },
   {
