@@ -30,7 +30,54 @@ class FinanceDossier(Document):
 	def on_cancel(self):
 		self.sync_opportunity_status()
 
+	def on_trash(self):
+		self._block_delete_in_workflow()
+
 	# -- validation -----------------------------------------------------------
+
+	def _block_delete_in_workflow(self):
+		"""Block deleting a Finance Dossier once it has entered the approval workflow
+		(BUG-011).
+
+		Only a *clean Draft* may be deleted: one that is not submitted/cancelled, whose
+		source Quotation is not yet submitted, and that has no documents under review or
+		already approved. Deleting a dossier that is mid-approval (or beyond) would
+		permanently destroy the approval record with no way to re-approve."""
+		if self.docstatus != 0:
+			frappe.throw(
+				_(
+					"Cannot delete a Finance Dossier that is submitted or cancelled — it "
+					"carries the approval record of the deal."
+				)
+			)
+
+		if (
+			self.finance_dossier_from == "Quotation"
+			and self.id
+			and frappe.db.get_value("Quotation", self.id, "docstatus") == 1
+		):
+			frappe.throw(
+				_(
+					"Cannot delete a Finance Dossier whose Quotation is already submitted "
+					"(the deal is contracted). Cancel/amend the deal instead."
+				)
+			)
+
+		for ref_doctype, ref_name in self._document_reference_chain():
+			if frappe.db.exists(
+				"Business Documentation",
+				{
+					"reference_doctype": ref_doctype,
+					"reference_name": ref_name,
+					"status": ["in", ["PENDING_APPROVAL", "APPROVED"]],
+				},
+			):
+				frappe.throw(
+					_(
+						"Cannot delete a Finance Dossier that is in the approval workflow — "
+						"documents are pending review or already approved. Cancel/amend instead."
+					)
+				)
 
 	def _document_reference_chain(self):
 		"""Every ``(doctype, name)`` whose Business Documentation counts toward this
