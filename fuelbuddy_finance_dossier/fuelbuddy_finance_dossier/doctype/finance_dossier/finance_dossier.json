@@ -25,6 +25,7 @@
   "column_break_qtww",
   "payment_mode",
   "credit_days",
+  "credit_insurance_limit",
   "discount_info_section",
   "discount",
   "discount_method",
@@ -165,8 +166,14 @@
   {
    "fieldname": "credit_days",
    "fieldtype": "Link",
-   "label": "Credit Days",
+   "label": "Payment Terms",
    "options": "Payment Term"
+  },
+  {
+   "description": "Insured credit limit for this customer. On submit it becomes the customer's credit limit on the Credit record.",
+   "fieldname": "credit_insurance_limit",
+   "fieldtype": "Currency",
+   "label": "Credit Insurance Limit"
   },
   {
    "fieldname": "discount_info_section",
@@ -246,7 +253,7 @@
  "permissions": [
   {
    "create": 1,
-   "delete": 1,
+   "delete": 0,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -256,6 +263,13 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "delete": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager"
   }
  ],
  "row_format": "Dynamic",

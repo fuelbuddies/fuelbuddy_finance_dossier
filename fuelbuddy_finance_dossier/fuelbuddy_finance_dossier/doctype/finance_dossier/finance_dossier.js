@@ -126,19 +126,25 @@ function toggle_discount_fields(frm) {
 	}
 }
 
-// "Fetch Discount Reference On Finance Dossier": keep the dossier's discount in sync
-// with the source doc, and write this dossier's name back onto the source doc.
+// Write this dossier's name back onto the source doc, and make sure the Business
+// Documents panel (with the Approve / Reject actions) gets painted on first open.
+//
+// NOTE: the dossier's `discount` is set server-side when the FD is created (and kept
+// in sync from the Opportunity). The old `set_discount_from_linked_doc` re-read a
+// `discount` field off the source Quotation/Opportunity -- which have no such field --
+// so on every refresh it ran `frm.set_value("discount", "")`, clearing the link and
+// marking the freshly-opened form *dirty* (and wiping the discount on save). Removed.
 frappe.ui.form.on("Finance Dossier", {
 	refresh: function (frm) {
-		set_discount_from_linked_doc(frm);
-	},
-
-	finance_dossier_from: function (frm) {
-		set_discount_from_linked_doc(frm);
-	},
-
-	id: function (frm) {
-		set_discount_from_linked_doc(frm);
+		// The Business Documents panel is painted by a DB Client Script on `refresh`.
+		// On the first Finance Dossier opened in a session that script can finish
+		// loading *after* this refresh fires, so the panel -- and its Approve/Reject
+		// buttons -- only appears after a manual reload. This controller JS is bundled
+		// with the app and always loaded before refresh, so paint it from here too
+		// (idempotent), retrying until the shared bizdocs helper is available.
+		if (!frm.is_new()) {
+			ensure_bizdocs_panel(frm, 0);
+		}
 	},
 
 	after_save: function (frm) {
@@ -146,26 +152,12 @@ frappe.ui.form.on("Finance Dossier", {
 	},
 });
 
-function set_discount_from_linked_doc(frm) {
-	if (!frm.doc.finance_dossier_from || !frm.doc.id) {
-		frm.set_value("discount", "");
-		return;
+function ensure_bizdocs_panel(frm, tries) {
+	if (frappe.bizdocs && frappe.bizdocs.render) {
+		frappe.bizdocs.render(frm);
+	} else if (tries < 20) {
+		setTimeout(() => ensure_bizdocs_panel(frm, tries + 1), 150);
 	}
-
-	frappe.call({
-		method: "frappe.client.get",
-		args: {
-			doctype: frm.doc.finance_dossier_from,
-			name: frm.doc.id,
-		},
-		callback: function (r) {
-			if (r.message) {
-				frm.set_value("discount", r.message.discount || "");
-			} else {
-				frm.set_value("discount", "");
-			}
-		},
-	});
 }
 
 function update_reference_on_linked_doc(frm) {
