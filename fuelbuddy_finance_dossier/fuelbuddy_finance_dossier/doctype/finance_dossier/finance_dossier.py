@@ -7,6 +7,26 @@ from frappe.model.document import Document
 
 DOCSTATUS_LABELS = {0: "Draft", 1: "Submitted", 2: "Cancelled"}
 
+# Shared "Fuelbuddy Settings" single doctype (hosted in fuelbuddy_crm, read by all
+# FuelBuddy apps): the "document_required" flag gates every Business Documentation
+# validation on the deal flow. When off, the Finance Dossier submits without any
+# documents and no document-status check blocks it.
+FB_SETTINGS_DOCTYPE = "Fuelbuddy Settings"
+
+
+def documents_required():
+	"""True when Business Documents are enforced ("Document Required" in Fuelbuddy
+	Settings). Defaults to enforced when the flag has never been set, preserving the
+	original always-required behaviour. Read straight from tabSingles because
+	``get_single_value`` casts a missing Check field to 0, hiding "never set"."""
+	row = frappe.db.sql(
+		"select value from `tabSingles` where doctype=%s and field=%s",
+		(FB_SETTINGS_DOCTYPE, "document_required"),
+	)
+	if not row:
+		return True
+	return bool(frappe.utils.cint(row[0][0]))
+
 
 class FinanceDossier(Document):
 	def before_submit(self):
@@ -63,6 +83,9 @@ class FinanceDossier(Document):
 				)
 			)
 
+		if not documents_required():
+			return  # documents not enforced -> their status never blocks deletion
+
 		for ref_doctype, ref_name in self._document_reference_chain():
 			if frappe.db.exists(
 				"Business Documentation",
@@ -117,7 +140,12 @@ class FinanceDossier(Document):
 		"""Every Business Documentation across the deal chain (this Finance Dossier,
 		its Quotation/Opportunity, and the underlying Customer/Lead) must be APPROVED
 		before the Finance Dossier can be submitted. Approval is done manually from
-		the dossier's document panel; at least one document must exist."""
+		the dossier's document panel; at least one document must exist.
+
+		Skipped entirely when "Document Required" is off in Fuelbuddy Settings."""
+		if not documents_required():
+			return
+
 		docs = []
 		for ref_doctype, ref_name in self._document_reference_chain():
 			docs += frappe.get_all(
