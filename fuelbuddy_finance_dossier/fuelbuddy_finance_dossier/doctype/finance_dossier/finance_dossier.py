@@ -30,22 +30,16 @@ def documents_required():
 
 class FinanceDossier(Document):
 	def before_submit(self):
-		# Documents must be uploaded and the source Quotation submitted before a
-		# Finance Dossier can be submitted/approved.
+		# Documents must be uploaded before a Finance Dossier can be submitted.
+		# (FD-first flow: the QUOTATION validates that this dossier is submitted,
+		# not the other way around — see fuelbuddy_crm.finance_dossier.require_submitted_dossier.)
 		self._require_documents()
-		self._require_submitted_quotation()
 
 	def on_update(self):
 		self.sync_opportunity_status()
 
 	def on_submit(self):
 		self.sync_opportunity_status()
-		self._maybe_create_sales_order()
-
-	def on_update_after_submit(self):
-		# Safety net: if SO wasn't created at submit time, retry when the
-		# submitted Finance Dossier is saved again.
-		self._maybe_create_sales_order()
 
 	def on_cancel(self):
 		self.sync_opportunity_status()
@@ -172,15 +166,6 @@ class FinanceDossier(Document):
 				).format(labels)
 			)
 
-	def _require_submitted_quotation(self):
-		"""The Quotation this Finance Dossier was raised from must be submitted."""
-		if self.finance_dossier_from != "Quotation" or not self.id:
-			return
-		if frappe.db.get_value("Quotation", self.id, "docstatus") != 1:
-			frappe.throw(
-				_("Quotation {0} must be submitted before submitting the Finance Dossier.").format(self.id)
-			)
-
 	# -- linkage / automation -------------------------------------------------
 
 	def _opportunity(self):
@@ -192,17 +177,6 @@ class FinanceDossier(Document):
 		if self.finance_dossier_from == "Quotation" and self.id:
 			return frappe.db.get_value("Quotation", self.id, "custom_opportunity_from")
 		return None
-
-	def _maybe_create_sales_order(self):
-		opportunity = self._opportunity()
-		if not opportunity:
-			return
-		try:
-			from fuelbuddy_crm.sales_automation import create_sales_order_if_ready
-
-			create_sales_order_if_ready(opportunity)
-		except ImportError:
-			pass
 
 	def sync_opportunity_status(self):
 		"""Reflect this Finance Dossier's docstatus on the source Opportunity."""
