@@ -28,18 +28,42 @@ def documents_required():
 	return bool(frappe.utils.cint(row[0][0]))
 
 
+def fd_first_flow():
+	"""The "FD-First Flow" switch on the shared Fuelbuddy Settings single (hosted in
+	fuelbuddy_crm). ON: the Quotation validates that its dossier is submitted and the
+	Sales Order is triggered by the Quotation submit. OFF (default): legacy order —
+	the dossier requires a submitted Quotation and its submit triggers the SO.
+	Reading a Single needs no schema, and any failure (fuelbuddy_crm not installed)
+	falls back to the legacy order, so the two apps deploy independently."""
+	try:
+		return bool(frappe.db.get_single_value("Fuelbuddy Settings", "fd_first_flow"))
+	except Exception:
+		return False
+
+
 class FinanceDossier(Document):
 	def before_submit(self):
 		# Documents must be uploaded before a Finance Dossier can be submitted.
-		# (FD-first flow: the QUOTATION validates that this dossier is submitted,
-		# not the other way around — see fuelbuddy_crm.finance_dossier.require_submitted_dossier.)
+		# FD-first flow ON: the QUOTATION validates that this dossier is submitted
+		# (fuelbuddy_crm.finance_dossier.require_submitted_dossier), not vice versa.
+		# OFF: legacy order — this dossier requires a submitted Quotation.
 		self._require_documents()
+		if not fd_first_flow():
+			self._require_submitted_quotation()
 
 	def on_update(self):
 		self.sync_opportunity_status()
 
 	def on_submit(self):
 		self.sync_opportunity_status()
+		if not fd_first_flow():
+			self._maybe_create_sales_order()
+
+	def on_update_after_submit(self):
+		# Legacy-flow safety net: if the SO wasn't created at submit time, retry
+		# when the submitted Finance Dossier is saved again.
+		if not fd_first_flow():
+			self._maybe_create_sales_order()
 
 	def on_cancel(self):
 		self.sync_opportunity_status()
@@ -166,6 +190,16 @@ class FinanceDossier(Document):
 				).format(labels)
 			)
 
+	def _require_submitted_quotation(self):
+		"""Legacy order (FD-First Flow OFF): the Quotation this Finance Dossier was
+		raised from must be submitted first."""
+		if self.finance_dossier_from != "Quotation" or not self.id:
+			return
+		if frappe.db.get_value("Quotation", self.id, "docstatus") != 1:
+			frappe.throw(
+				_("Quotation {0} must be submitted before submitting the Finance Dossier.").format(self.id)
+			)
+
 	# -- linkage / automation -------------------------------------------------
 
 	def _opportunity(self):
@@ -177,6 +211,18 @@ class FinanceDossier(Document):
 		if self.finance_dossier_from == "Quotation" and self.id:
 			return frappe.db.get_value("Quotation", self.id, "custom_opportunity_from")
 		return None
+
+	def _maybe_create_sales_order(self):
+		"""Legacy order (FD-First Flow OFF): FD submit kicks the SO automation."""
+		opportunity = self._opportunity()
+		if not opportunity:
+			return
+		try:
+			from fuelbuddy_crm.sales_automation import create_sales_order_if_ready
+
+			create_sales_order_if_ready(opportunity)
+		except ImportError:
+			pass
 
 	def sync_opportunity_status(self):
 		"""Reflect this Finance Dossier's docstatus on the source Opportunity."""
