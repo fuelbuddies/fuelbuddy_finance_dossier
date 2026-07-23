@@ -192,6 +192,11 @@ app_license = "mit"
 # Ignore links to specified DocTypes when deleting documents
 # -----------------------------------------------------------
 
+# Finance Dossier <-> Quotation linked each other (deadlock, same as Discount). Making
+# the FD's outgoing links non-blocking makes it one-way: delete the Quotation first,
+# then the orphaned Finance Dossier.
+ignore_links_on_delete = ["Finance Dossier"]
+
 # ignore_links_on_delete = ["Communication", "ToDo"]
 
 # Request Events
